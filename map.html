@@ -4,7 +4,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-      <title> {% block title %}{% endblock %}</title>
+      <script type="text/javascript" src="{{ url_for('js', filename='javascript.js') }}"></script>
 
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -46,9 +46,6 @@
 
         <div id="mapid"></div>
 
-        <input id="datepicker1" name= "date1" width="276" placeholder="First Date"/>
-        <input id="datepicker2" name= "date2" width="276" placeholder="Second Date"/>
-
           <script>
 
           // initialize the map
@@ -80,20 +77,7 @@
            circle.bindPopup("I am a circle.");
            polygon.bindPopup("I am a polygon.");
 
-        </script>
-
-        <script>
-            $('#datepicker1').datepicker({
-                uiLibrary: 'bootstrap4'
-            });
-
-            $('#datepicker2').datepicker({
-                uiLibrary: 'bootstrap4'
-            });
-        </script>
-
-
-        <script>
+           //for the GeoJSON
           var geojsonFeature = {
             "type": "Feature",
             "properties": {
@@ -109,9 +93,49 @@
 
           L.geoJSON(geojsonFeature).addTo(map);
 
+
+            // for the date widget
+            $('#datepicker1').datepicker({
+                uiLibrary: 'bootstrap4'
+            });
+
+            $('#datepicker2').datepicker({
+                uiLibrary: 'bootstrap4'
+            });
+
+
         </script>
 
+        <form action="#" class="ws-validate">
+            <div class="form-row">
 
+              <input id="datepicker1" name= "date1" width="276" placeholder="First Date"/>
+              <input id="datepicker2" name= "date2" width="276" placeholder="Second Date"/>
+
+            </div>
+
+        	<div class="form-row">
+        		<input type="submit" />
+        	</div>
+
+        </form>
+
+        <script>
+
+          // Accesses Calgary's API to search for the building permits
+          $.ajax({
+              url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate > '2020-01-21' and issueddate < '2020-01-23'",
+              type: "GET",
+              data: {
+                "$limit" : 5000,
+                "$$app_token" : "YOURAPPTOKENHERE"
+              }
+          }).done(function(data) {
+            alert("Retrieved " + data.length + " records from the dataset!");
+            console.log(data);
+          });
+
+        </script>
 
     </body>
 </html>
