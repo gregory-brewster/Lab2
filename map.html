@@ -128,10 +128,9 @@
               type: "GET",
               data: {
                 "$limit" : 5000,
-                "$$app_token" : "YOURAPPTOKENHERE"
               }
           }).done(function(data) {
-            alert("Retrieved " + data.length + " records from the dataset!");
+            alert("Retrieved " + data['features'].length + " records from the dataset!");
             console.log(data);
           });
 
