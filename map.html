@@ -130,6 +130,7 @@
                 "$limit" : 5000,
               }
           }).done(function(data) {
+            L.geoJSON(data['features']).addTo(mymap)
             alert("Retrieved " + data['features'].length + " records from the dataset!");
             console.log(data);
           });
