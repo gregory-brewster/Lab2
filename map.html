@@ -87,11 +87,11 @@
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [51.0447, -114.0719]
+                "coordinates": [-114.0719, 51.0447]
             }
           };
 
-          L.geoJSON(geojsonFeature).addTo(map);
+          L.geoJSON(geojsonFeature).addTo(mymap);
 
 
             // for the date widget
@@ -128,10 +128,10 @@
               type: "GET",
               data: {
                 "$limit" : 5000,
-                "$$app_token" : "YOURAPPTOKENHERE"
               }
           }).done(function(data) {
-            alert("Retrieved " + data.length + " records from the dataset!");
+            L.geoJSON(data['features']).addTo(mymap)
+            alert("Retrieved " + data['features'].length + " records from the dataset!");
             console.log(data);
           });
 
