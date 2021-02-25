@@ -93,17 +93,6 @@
 
           L.geoJSON(geojsonFeature).addTo(mymap);
 
-
-            // for the date widget
-            $('#datepicker1').datepicker({
-                uiLibrary: 'bootstrap4'
-            });
-
-            $('#datepicker2').datepicker({
-                uiLibrary: 'bootstrap4'
-            });
-
-
         </script>
 
         <form action="#" class="ws-validate">
@@ -121,10 +110,19 @@
         </form>
 
         <script>
+            
+          // for the date widget
+          $('#datepicker1').datepicker({
+              uiLibrary: 'bootstrap4'
+          });
 
+          $('#datepicker2').datepicker({
+              uiLibrary: 'bootstrap4'
+          });
+            
           // Accesses Calgary's API to search for the building permits
           $.ajax({
-              url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate > '2020-01-21' and issueddate < '2020-01-23'",
+              url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >" + datepicker1 + "and issueddate <" + datepicker2,
               type: "GET",
               data: {
                 "$limit" : 5000,
@@ -135,6 +133,15 @@
             console.log(data);
           });
 
+          var i;
+          for (i = 0; i < data['features'].length; i++) {
+
+            pin_coords = data['features'][1]['geometry'][1]['coordinates'];
+            pin_values = "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=coordinates = " + pin_coords + "&$select=issueddate,workclassgroup,contractorname,communityname,originaladdress";
+
+            ?? .bindPopup(pin_values).openPopup();
+          }
+            
         </script>
 
     </body>
