@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-          crossorigin=""></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin=""/>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		  crossorigin=""></script>
 
         <style>
           #mapid { width: 900px; height: 500px; }
@@ -56,24 +60,32 @@
         </script>
 
         <form>
-          Date1: <input type="date" id="date1" name="date1n" /><br>
-          Date2: <input type="date" id="date2" name="date2n" /><br>
+          <input type="text" name="daterange" value="01/21/2020 - 01/23/2020"/>
           <input type = "button" onclick ="myFunction()" value = "Submit">
         </form>
 
         <script>
-           function myFunction() {
-            var input1 = document.getElementById("date1").value;
-            var input2 = document.getElementById("date2").value;
+          $(function() {
+              $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+              }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+              });
+            });
+
+          function myFunction() {
+            let starttime = $('input[name="daterange"]').data('daterangepicker').startDate.format('YYYY-MM-DD');
+            let endtime = $('input[name="daterange"]').data('daterangepicker').endDate.format('YYYY-MM-DD');
+
 
             // initialize the marker. Option 1
              var marker = L.marker([51.09, -114.09]).addTo(mymap);
              // The marker option 1
-             marker.bindPopup(input1+" & "+input2).openPopup();
+             // marker.bindPopup(input1+" & "+input2).openPopup();
 
              // Accesses Calgary's API to search for the building permits
              $.ajax({
-                 url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >" + input1 + "and issueddate <" + input2,
+                 url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >'"+starttime+"' and issueddate <'"+endtime+"'",
                  //url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >'2020-01-21' and issueddate < '2020-01-23'",
                  type: "GET",
                  data: {
