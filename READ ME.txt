@@ -1,0 +1,14 @@
+ENGO 551 Lab 2
+
+Youtube Link: https://youtu.be/bimpybcZ1dQ
+GitHub: https://github.com/gregory-brewster/Lab2
+
+Unfortunately, the lab is not completed. The problems that were encountered in this lab require an 
+extensive amount of additional time that would be better spent studying for midterms. 
+
+Map.html
+First, the variable mymap is created with it centered on downtown Calgary. Then the map is visually by 
+adding the layer to the website. This is done my accessing the Mapbox API using a provided access token. 
+Next is when the user inputs the date ranges. Once the dates have been entered, the function myFunction 
+is entered. First, the building permits within the inputted date ranges are gathered from Calgary’s API 
+and added as markers on the map.
