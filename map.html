@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-		crossorigin=""/>
-		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-		  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-		  crossorigin=""></script>
+  		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  		crossorigin=""/>
+  		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  		  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  		  crossorigin=""></script>
 
-        <style>
-          #mapid { width: 900px; height: 500px; }
-        </style>
-
+      <style>
+        #mapid { width: 900px; height: 500px; }
+      </style>
 
     </head>
     <body>
-      <h5>Map of Calgary</h5>
+      <h4>Map of Calgary</h4><br>
+
 
         <div id="mapid"></div>
 
@@ -32,6 +32,9 @@
 
           // initialize the map
            var mymap = L.map('mapid').setView([51.0447, -114.0719], 11.3);
+
+          // initialize the marker. Option 1
+           //var marker = L.marker([51.09, -114.09]).addTo(mymap);
 
           // load a tile layer
            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -44,27 +47,16 @@
            }).addTo(mymap);
 
 
-           // Load the polygon marker
-           // var polygon = L.polygon([
-           //   [51.0448, -114.0730],
-           //   [51.0430, -114.0719],
-           //   [51.0446, -114.0710]
-           // ]).addTo(mymap);
-
-           // The marker option 1
-           //marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-           //circle.bindPopup("I am a circle.");
-           //polygon.bindPopup("I am a polygon.");
-
-
         </script>
-
+        <br><p>Please pick a date range for the desired building permits.</p>
         <form>
-          <input type="text" name="daterange" value="01/21/2020 - 01/23/2020"/>
-          <input type = "button" onclick ="myFunction()" value = "Submit">
+          <input type="text" name="daterange">
+          <input type = "button" class="btn btn-info" onclick ="myFunction()" value = "Submit">
         </form>
 
+
         <script>
+        //Date range picker
           $(function() {
               $('input[name="daterange"]').daterangepicker({
                 opens: 'left'
@@ -73,15 +65,11 @@
               });
             });
 
+          //Function entered when dates have been picked
           function myFunction() {
             let starttime = $('input[name="daterange"]').data('daterangepicker').startDate.format('YYYY-MM-DD');
             let endtime = $('input[name="daterange"]').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
-
-            // initialize the marker. Option 1
-             var marker = L.marker([51.09, -114.09]).addTo(mymap);
-             // The marker option 1
-             // marker.bindPopup(input1+" & "+input2).openPopup();
 
              // Accesses Calgary's API to search for the building permits
              $.ajax({
@@ -92,29 +80,18 @@
                    "$limit" : 5000,
                  }
 
-
              }).done(function(data) {
-               L.geoJSON(data['features']).addTo(mymap)
+               var markers = L.geoJSON(data['features']);
+               markers.addTo(mymap);
                alert("Retrieved " + data['features'].length + " records from the dataset!");
                console.log(data);
 
-               var i;
-               for (i = 0; i < data['features'].length; i++) {
-
-                 pin_coords = data[i]['features']['geometry']['coordinates'];
-                 markers = L.marker(pin_coords[i]).addTo(mymap);
-
-                 //pin_coords = data.features.geometry.coordinates;
-                 pin_values = "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=coordinates = " + pin_coords + "&$select=issueddate,workclassgroup,contractorname,communityname,originaladdress";
-
-                 //Adding the markers
-                 markers.bindPopup(pin_values[i]).openPopup();
-
-               }
              });
           }
 
-        </script>
+          </script>
+
+
 
     </body>
 </html>
