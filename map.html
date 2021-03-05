@@ -56,15 +56,23 @@
         </script>
 
         <form>
-          Date1: <input type="date" id="date1" name="date1n" /><br>
-          Date2: <input type="date" id="date2" name="date2n" /><br>
+          <input type="text" name="daterange" value="01/21/2020 - 01/23/2020"/>
           <input type = "button" onclick ="myFunction()" value = "Submit">
         </form>
 
         <script>
-           function myFunction() {
-            var input1 = document.getElementById("date1").value;
-            var input2 = document.getElementById("date2").value;
+          $(function() {
+              $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+              }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+              });
+            });
+
+          function myFunction() {
+            let starttime = $('input[name="daterange"]').data('daterangepicker').startDate.format('YYYY-MM-DD');
+            let endtime = $('input[name="daterange"]').data('daterangepicker').endDate.format('YYYY-MM-DD');
+
 
             // initialize the marker. Option 1
              var marker = L.marker([51.09, -114.09]).addTo(mymap);
@@ -73,7 +81,7 @@
 
              // Accesses Calgary's API to search for the building permits
              $.ajax({
-                 url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >" + input1 + "and issueddate <" + input2,
+                 url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >"+starttime+"and issueddate <"+endtime,
                  //url: "https://data.calgary.ca/resource/c2es-76ed.geojson?$where=issueddate >'2020-01-21' and issueddate < '2020-01-23'",
                  type: "GET",
                  data: {
